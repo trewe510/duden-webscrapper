@@ -1,5 +1,5 @@
 
-# Duden WebScrapper
+## Duden WebScrapper
 
 ```
 composer require marciodojr/duden-webscrapper
