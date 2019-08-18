@@ -49,49 +49,114 @@ class DudenWebScrapper
         $main = $result->find('article');
         $type = $main->find('.tuple__val')[0]->text;
         $typeArr = explode(', ', $type);
+        $gender = isset($typeArr[1]) ? $typeArr[1] : null;
+        $lemma = str_replace('­', '', $main->find('.lemma__main')->text);
+        $determiner = $main->find('.lemma__determiner');
+        $spelling = $this->parseSpelling($main->find('#rechtschreibung .tuple'));
         $meanings = $this->parseMeaning($main->find('#bedeutungen ol li'));
 
         $wordInfo = [
-            'lemma' => $main->find('.lemma__main')->text,
-            'lemma_determiner' => $main->find('.lemma__determiner')->text,
+            'lemma' => $lemma,
+            'lemma_determiner' => count($determiner) > 0 ? $determiner->text : null,
             'word_type' => $typeArr[0],
-            'word_gender' => empty($typeArr[1]) ? null : $typeArr[1],
-            'word_gender' => empty($typeArr[1]) ? null : $typeArr[1],
-            'hyphenation' => $main->find('#rechtschreibung .tuple__val')[0]->text,
+            'word_gender' => $gender,
+            'spelling' => $spelling,
             'meaning' => $meanings,
         ];
 
         return $wordInfo;
     }
 
-    private function parseMeaning($meaningLis)
+    private function parseSpelling($spelling)
     {
-        $meanings = [];
-
-        foreach ($meaningLis as $li) {
-            $figure = $li->find('figure')[0];
-            $notes = $li->find('dl.note');
-
-            $notesArr = [];
-            foreach ($notes as $n) {
-                $items = [];
-                foreach ($n->find('.note__list li') as $item) {
-                    $items[] = $item->text;
-                }
-                $notesArr[] = [
-                    'title' => $n->find('.note__title')->text,
-                    'items' => $items
-                ];
-            }
-
-            $meanings[] = [
-                'text' => $li->find('.enumeration__text')->text,
-                'figure' => $figure ? $figure->find('a')->getAttribute('href') : null,
-                'notes' => $notesArr
+        $spellingArr = [];
+        foreach($spelling as $sp) {
+            $title = $sp->find('.tuple__key')->text;
+            $value = $sp->find('.tuple__val');
+            $spellingArr[] = [
+                'title' => $title,
+                'value' => $title != 'Verwandte Form' ? $value->text : $value->find('a')->text,
             ];
         }
 
+        return $spellingArr;
+    }
+
+    private function parseMeaning($meaningLis)
+    {
+        $meanings = [];
+        foreach ($meaningLis as $li) {
+            $meaningArray = [];
+            $subLis = $li->find('.enumeration__sub-item');
+            if (count($subLis) < 1) { // test for subitems. Ex: 2.a), 2.b)
+                $meaningArray[] = $this->parseMeaningKernel($li);
+            } else {
+                foreach ($subLis as $subLi) {
+                    $meaningArray[] = $this->parseMeaningKernel($subLi);
+                }
+            }
+
+            $meanings[] = $meaningArray;
+        }
+
         return $meanings;
+    }
+
+    private function parseMeaningKernel($li)
+    {
+        $parsedFigure = null;
+        $figure = $li->find('figure')[0];
+        $notes = $li->find('dl.note');
+        $tuples = $li->find('dl.tuple');
+
+        $notesArr = count($notes) > 1
+            ? $this->parseMeaningKernelNotes($notes)
+            : $this->parseMeaningKernelTuples($tuples);
+
+
+        if ($figure) {
+            $parsedFigure = [
+                'link' => $figure->find('a')->getAttribute('href'),
+                'caption' => $figure->find('.depiction__caption')->text,
+            ];
+        }
+        return  [
+            'text' => $li->find('.enumeration__text')->text,
+            'figure' => $parsedFigure,
+            'notes' => $notesArr
+        ];
+    }
+
+    private function parseMeaningKernelNotes($notes)
+    {
+        $notesArr = [];
+        foreach ($notes as $n) {
+            $items = [];
+            foreach ($n->find('.note__list li') as $item) {
+                $items[] = $item->text;
+            }
+            $notesArr[] = [
+                'title' => $n->find('.note__title')->text,
+                'items' => $items
+            ];
+        }
+
+        return $notesArr;
+    }
+
+    private function parseMeaningKernelTuples($tuples)
+    {
+        $tupleArr = [];
+        foreach ($tuples as $n) {
+            $tupleArr[] = [
+                'title' => $n->find('.tuple__key')->text,
+                'items' => [
+                    $n->find('.tuple__val')->text
+                ]
+            ];
+        }
+
+        return $tupleArr;
     }
 
     private function get(string $uri, array $options, string $format)

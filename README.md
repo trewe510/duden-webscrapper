@@ -47,78 +47,129 @@ $ws = new DudenWebScrapper($numberOfAttemptsBeforeConnectionException);
 // get orthography (Rechtschreibung)
 $orthography = $ws->getWordInfo('Apfel');
 
-
 print_r($orthography);
-
 
 /*
 (
-    [lemma] => Ap­fel
+    [lemma] => Apfel
     [lemma_determiner] => der
     [word_type] => Substantiv
     [word_gender] => maskulin
-    [hyphenation] => Ap|fel
+    [spelling] => Array
+        (
+            [0] => Array
+                (
+                    [title] => Worttrennung
+                    [value] => Ap|fel
+                )
+
+        )
+
     [meaning] => Array
         (
             [0] => Array
                 (
-                    [text] => rundliche, fest-fleischige, aromatisch schmeckende Frucht mit Kerngehäuse; Frucht des Apfelbaums
-                    [figure] => https://cdn.duden.de/_media_/full/A/Apfel-201020037492.jpg
-                    [notes] => Array
+                    [0] => Array
                         (
-                            [0] => Array
+                            [text] => rundliche, fest-fleischige, aromatisch schmeckende Frucht mit Kerngehäuse; Frucht des Apfelbaums
+                            [figure] => Array
                                 (
-                                    [title] => Beispiele
-                                    [items] => Array
-                                        (
-                                            [0] => ein grüner, saurer, wurmstichiger, rotbäckiger, gebratener Apfel
-                                            [1] => Apfel im Schlafrock
-                                            [2] => Äpfel pflücken, [vom Baum] schütteln, schälen, reiben
-                                        )
+                                    [link] => https://cdn.duden.de/_media_/full/A/Apfel-201020037492.jpg
+                                    [caption] => © MEV Verlag, Augsburg
                                 )
-                            [1] => Array
+
+                            [notes] => Array
                                 (
-                                    [title] => Wendungen, Redensarten, Sprichwörter
-                                    [items] => Array
+                                    [0] => Array
                                         (
-                                            [0] => Äpfel und Birnen zusammenzählen, Äpfel mit Birnen vergleichen (umgangssprachlich: Unvereinbares zusammenbringen)
-                                            [1] => für einen Apfel und ein Ei (umgangssprachlich: sehr billig, für einen unbedeutenden Betrag: etwas für einen Apfel und ein Ei kriegen)
-                                            [2] => in den sauren Apfel beißen (umgangssprachlich: etwas Unangenehmes notgedrungen tun)
-                                            [3] => der Apfel fällt nicht weit vom Stamm/nicht weit vom Pferd (jemand ist in seinen [negativen] Anlagen, in seinem Verhalten den Eltern sehr ähnlich)
+                                            [title] => Beispiele
+                                            [items] => Array
+                                                (
+                                                    [0] => ein grüner, saurer, wurmstichiger, rotbäckiger, gebratener Apfel
+                                                    [1] => Apfel im Schlafrock
+                                                    [2] => Äpfel pflücken, [vom Baum] schütteln, schälen, reiben
+                                                )
+
                                         )
+
+                                    [1] => Array
+                                        (
+                                            [title] => Wendungen, Redensarten, Sprichwörter
+                                            [items] => Array
+                                                (
+                                                    [0] => Äpfel und Birnen zusammenzählen, Äpfel mit Birnen vergleichen (umgangssprachlich: Unvereinbares zusammenbringen)
+                                                    [1] => für einen Apfel und ein Ei (umgangssprachlich: sehr billig, für einen unbedeutenden Betrag: etwas für einen Apfel und ein Ei kriegen)
+                                                    [2] => in den sauren Apfel beißen (umgangssprachlich: etwas Unangenehmes notgedrungen tun)
+                                                    [3] => der Apfel fällt nicht weit vom Stamm/nicht weit vom Pferd (jemand ist in seinen [negativen] Anlagen, in seinem Verhalten den Eltern sehr ähnlich)
+                                                )
+
+                                        )
+
                                 )
+
                         )
+
                 )
+
             [1] => Array
                 (
-                    [text] => Apfelbaum
-                    [figure] => https://cdn.duden.de/_media_/full/A/Apfel-201020043738.jpg
-                    [notes] => Array
+                    [0] => Array
                         (
-                            [0] => Array
+                            [text] => Apfelbaum
+                            [figure] => Array
                                 (
-                                    [title] => Beispiel
-                                    [items] => Array
-                                        (
-                                            [0] => die Äpfel blühen dieses Jahr spät
-                                        )
+                                    [link] => https://cdn.duden.de/_media_/full/A/Apfel-201020043738.jpg
+                                    [caption] => © Jacqueline Barth - Fotolia.com
                                 )
-                            [1] => Array
+
+                            [notes] => Array
                                 (
-                                    [title] => Beispiel
-                                    [items] => Array
-                                        (
-                                            [0] => dies ist ein früher Apfel
-                                        )
                                 )
+
                         )
+
+                    [1] => Array
+                        (
+                            [text] => Apfelsorte
+                            [figure] =>
+                            [notes] => Array
+                                (
+                                )
+
+                        )
+
                 )
+
             [2] => Array
                 (
-                    [text] => Brüste
-                    [figure] =>
-                    [notes] => Array
+                    [0] => Array
                         (
+                            [text] => Brüste
+                            [figure] =>
+                            [notes] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [title] => Gebrauch
+                                            [items] => Array
+                                                (
+                                                    [0] => verhüllend
+                                                )
+
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [title] => Grammatik
+                                            [items] => Array
+                                                (
+                                                    [0] => Pluraletantum
+                                                )
+
+                                        )
+
+                                )
+
                         )
 
                 )
@@ -127,12 +178,13 @@ print_r($orthography);
 
 )
 */
+
 ```
 
 
 ## Todo
 
-Parse orthography better
+Better parsing for prepositions
 
 
 ## Testing
