@@ -230,7 +230,7 @@ class DudenWebScrapper
     {
         $this->httpClient = new Client([
             'base_uri' => Endpoint::BASE,
-            'timeout' => 5.0
+            'timeout' => 15.0
         ]);
     }
 }
