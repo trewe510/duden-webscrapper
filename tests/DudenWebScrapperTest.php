@@ -28,6 +28,14 @@ class DudenWebScrapperTest extends TestCase
         $this->assertEquals($word, $orthography['lemma']);
     }
 
+    public function testSearchWordReißen()
+    {
+        $ws = $this->createInstance();
+        $word = 'reißen';
+        $orthography = $ws->getWordInfo($word);
+        $this->assertEquals($word, $orthography['lemma']);
+    }
+
     public function testSearchVerbPassieren()
     {
         $ws = $this->createInstance();

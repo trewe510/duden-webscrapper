@@ -132,8 +132,11 @@ class DudenWebScrapper
                 'caption' => $figure->find('.depiction__caption')->text,
             ];
         }
+
+        $en = $li->find('.enumeration__text');
+
         return  [
-            'text' => $li->find('.enumeration__text')->text,
+            'text' => count($en) ? $en->text : null,
             'figure' => $parsedFigure,
             'notes' => $notesArr
         ];
