@@ -34,12 +34,14 @@ class DudenWebScrapper
         }
 
         return array_map(function ($item) {
-            return str_replace(' ' . Endpoint::ORTHOGRAPHY . '/', '', $item->value);
+            return str_replace(' /suchen/dudenonline/', '', $item->value);
         }, $result);
     }
 
     public function getWordInfo(string $word)
     {
+        $word = $this->convert($word);
+
         $result = $this->get(Endpoint::ORTHOGRAPHY . '/' . $word, [], Formatter::HTML);
 
         if (!$result) {
@@ -49,6 +51,7 @@ class DudenWebScrapper
         $main = $result->find('article');
         $type = $main->find('.tuple__val')[0]->text;
         $typeArr = explode(', ', $type);
+        $frequency = mb_strlen($main->find('.tuple')[1]->find('.shaft__full')->text ?? '');
         $gender = isset($typeArr[1]) ? $typeArr[1] : null;
         $lemma = str_replace('­', '', $main->find('.lemma__main')->text);
         $determiner = $main->find('.lemma__determiner');
@@ -60,6 +63,7 @@ class DudenWebScrapper
             'lemma_determiner' => count($determiner) > 0 ? $determiner->text : null,
             'word_type' => $typeArr[0],
             'word_gender' => $gender,
+            'frequency' => $frequency,
             'spelling' => $spelling,
             'meaning' => $meanings,
         ];
@@ -67,10 +71,18 @@ class DudenWebScrapper
         return $wordInfo;
     }
 
+    private function convert(string $word)
+    {
+        $pattern = ['/ä/', '/ö/', '/ü/', '/ß/'];
+        $replacement = ['ae', 'oe', 'ue', 'sz'];
+
+        return preg_replace($pattern, $replacement, $word);
+    }
+
     private function parseSpelling($spelling)
     {
         $spellingArr = [];
-        foreach($spelling as $sp) {
+        foreach ($spelling as $sp) {
             $title = $sp->find('.tuple__key')->text;
             $value = $sp->find('.tuple__val');
             $spellingArr[] = [

@@ -20,11 +20,27 @@ class DudenWebScrapperTest extends TestCase
         $this->assertContains('Stamm', $words);
     }
 
+    public function testSearchWordWüsten()
+    {
+        $ws = $this->createInstance();
+        $word = 'wüsten';
+        $orthography = $ws->getWordInfo($word);
+        $this->assertEquals($word, $orthography['lemma']);
+    }
+
+    public function testSearchVerbPassieren()
+    {
+        $ws = $this->createInstance();
+        $orthography = $ws->getWordInfo('passieren');
+        // var_dump($orthography);
+        $this->assertArrayHasKey('lemma', $orthography);
+    }
+
     public function testGetWordInfoSubstantiveApfel()
     {
         $ws = $this->createInstance();
         $orthography = $ws->getWordInfo('Apfel');
-        print_r($orthography);
+        // var_dump($orthography);
         $this->assertArrayHasKey('lemma', $orthography);
     }
 
