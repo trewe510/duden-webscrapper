@@ -44,6 +44,14 @@ class DudenWebScrapperTest extends TestCase
         $this->assertArrayHasKey('lemma', $orthography);
     }
 
+    public function testSearchVerbAalen()
+    {
+        $ws = $this->createInstance();
+        $orthography = $ws->getWordInfo('aalen');
+        // var_dump($orthography);
+        $this->assertArrayHasKey('lemma', $orthography);
+    }
+
     public function testGetWordInfoSubstantiveApfel()
     {
         $ws = $this->createInstance();

@@ -49,12 +49,24 @@ class DudenWebScrapper
         }
 
         $main = $result->find('article');
-        $type = $main->find('.tuple__val')[0]->text;
+        $tuples = $main->find('.tuple');
+
+        $type = $tuples[0]->find('.tuple__val')->text;
         $typeArr = explode(', ', $type);
-        $frequency = mb_strlen($main->find('.tuple')[1]->find('.shaft__full')->text ?? '');
+        $frequency = 0;
+        $wordUsage = null;
+
+        $isFrequency = strpos($tuples[1]->find('.tuple__key')->text, 'Häufigkeit') === 0;
+        $frequencyPosition = $isFrequency ? 1 : 2;
+        if($frequencyPosition == 2) {
+            $wordUsage = $tuples[1]->find('.tuple__val')->text;
+        }
+        $frequency = mb_strlen($tuples[$frequencyPosition]->find('.tuple__val')->find('.shaft__full')->text ?? '');
+
         $gender = isset($typeArr[1]) ? $typeArr[1] : null;
         $lemma = str_replace('­', '', $main->find('.lemma__main')->text);
         $determiner = $main->find('.lemma__determiner');
+
         $spelling = $this->parseSpelling($main->find('#rechtschreibung .tuple'));
         $meanings = $this->parseMeaning($main->find('#bedeutungen ol li'));
 
@@ -62,6 +74,7 @@ class DudenWebScrapper
             'lemma' => $lemma,
             'lemma_determiner' => count($determiner) > 0 ? $determiner->text : null,
             'word_type' => $typeArr[0],
+            'word_usage' => $wordUsage,
             'word_gender' => $gender,
             'frequency' => $frequency,
             'spelling' => $spelling,
