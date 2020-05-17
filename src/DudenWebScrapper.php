@@ -57,11 +57,15 @@ class DudenWebScrapper
         $wordUsage = null;
 
         $isFrequency = strpos($tuples[1]->find('.tuple__key')->text, 'Häufigkeit') === 0;
+
         $frequencyPosition = $isFrequency ? 1 : 2;
         if($frequencyPosition == 2) {
             $wordUsage = $tuples[1]->find('.tuple__val')->text;
         }
-        $frequency = mb_strlen($tuples[$frequencyPosition]->find('.tuple__val')->find('.shaft__full')->text ?? '');
+
+        $fTupple = $tuples[$frequencyPosition]->find('.tuple__val')->find('.shaft__full');
+
+        $frequency = count($fTupple) > 0 ? mb_strlen($fTupple->text ?? '') : null;
 
         $gender = isset($typeArr[1]) ? $typeArr[1] : null;
         $lemma = str_replace('­', '', $main->find('.lemma__main')->text);
