@@ -2,6 +2,7 @@
 
 namespace Mdojr\DudenWebScrapper;
 
+use DOMDocument;
 use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
 use GuzzleHttp\Exception\ConnectException;
@@ -34,7 +35,11 @@ class DudenWebScrapper
         }
 
         return array_map(function ($item) {
-            return str_replace(' /suchen/dudenonline/', '', $item->value);
+            $dom = new DOMDocument();
+            $dom->loadHTML('<?xml encoding="utf-8" ?>' . $item->build);
+            $word = $dom->getElementsByTagName('span')[0]->textContent;
+
+            return $word;
         }, $result);
     }
 
@@ -59,7 +64,7 @@ class DudenWebScrapper
         $isFrequency = strpos($tuples[1]->find('.tuple__key')->text, 'Häufigkeit') === 0;
 
         $frequencyPosition = $isFrequency ? 1 : 2;
-        if($frequencyPosition == 2) {
+        if ($frequencyPosition == 2) {
             $wordUsage = $tuples[1]->find('.tuple__val')->text;
         }
 
