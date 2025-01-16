@@ -1,5 +1,5 @@
 {
-    "name": "marciodojr/duden-webscrapper",
+    "name": "trewe510/duden-webscrapper",
     "description": "WebScrapper for duden.de",
     "type": "library",
     "require-dev": {
